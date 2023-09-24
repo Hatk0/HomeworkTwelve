@@ -2,6 +2,13 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    // MARK: - Properties
+    
+    var isWorkTime = true
+    var isStarted = false
+    var timer: Timer?
+    var remainingTime = 25 * 60
+    
     // MARK: - UI
     
     private lazy var timerLabel: UILabel = {
