@@ -93,5 +93,11 @@ class ViewController: UIViewController {
         updateUI()
         timer?.invalidate()
     }
+    
+    func updateTimerLabel() {
+        let minutes = remainingTime / 60
+        let seconds = remainingTime % 60
+        timerLabel.text = String(format: "%02d:%02d", minutes, seconds)
+    }
 }
 
