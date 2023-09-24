@@ -60,7 +60,38 @@ class ViewController: UIViewController {
     // MARK: - Actions
 
     @objc func playPauseButtonTapped() {
+        if isStarted {
+            pauseTimer()
+        } else {
+            startTimer()
+        }
+    }
+    
+    func startTimer() {
+        isStarted = true
+        if remainingTime == 0 {
+            return
+        }
+        updateUI()
         
+        timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            self.remainingTime -= 1
+            self.updateTimerLabel()
+            
+            if self.remainingTime == 0 {
+                self.timer?.invalidate()
+                self.remainingTime = 0
+                self.isWorkTime.toggle()
+                self.updateUI()
+            }
+        }
+    }
+    
+    func pauseTimer() {
+        isStarted = false
+        updateUI()
+        timer?.invalidate()
     }
 }
 
