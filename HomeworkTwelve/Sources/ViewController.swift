@@ -27,6 +27,14 @@ class ViewController: UIViewController {
         return button
     }()
     
+    private lazy var progressBar: CircularProgressBarView = {
+           let progressBar = CircularProgressBarView(frame: CGRect(x: 0, y: 0, width: 200, height: 200))
+            progressBar.progressBarWidth = 10
+            progressBar.isUserInteractionEnabled = false
+            progressBar.translatesAutoresizingMaskIntoConstraints = false
+            return progressBar
+        }()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -43,8 +51,11 @@ class ViewController: UIViewController {
     }
     
     private func setupHierarchy() {
-        view.addSubview(timerLabel)
-        view.addSubview(playPauseButton)
+        let views = [timerLabel,
+                     playPauseButton,
+                     progressBar]
+        
+        views.forEach { view.addSubview($0) }
     }
     
     private func setupLayout() {
@@ -53,7 +64,12 @@ class ViewController: UIViewController {
             timerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
             playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            playPauseButton.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 20)
+            playPauseButton.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 20),
+            
+            progressBar.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            progressBar.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            progressBar.widthAnchor.constraint(equalToConstant: progressBar.frame.width),
+            progressBar.heightAnchor.constraint(equalToConstant: progressBar.frame.width)
         ])
         
         updateUI()
@@ -85,10 +101,14 @@ class ViewController: UIViewController {
             playPauseButton.addSubview(imageView)
         }
         
+        progressBar.progressBarColor = isWorkTime ? .systemRed : .systemGreen
+        
         let textColor = isWorkTime ? UIColor.systemRed : UIColor.systemGreen
         timerLabel.textColor = textColor
         playPauseButton.tintColor = textColor
         view.backgroundColor = isWorkTime ? .white : UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
+        
+        progressBar.progressLayer.strokeColor = progressBar.progressBarColor.cgColor
     }
     
     func startTimer() {
@@ -97,7 +117,10 @@ class ViewController: UIViewController {
             isWorkTime.toggle()
             remainingTime = isWorkTime ? 25 * 60 : 5 * 60
         }
+        
+        progressBar.progressBarColor = isWorkTime ? .systemRed : .systemGreen
         updateUI()
+        progressBar.startAnimating(duration: TimeInterval(remainingTime))
         
         timer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
             guard let self = self else { return }
@@ -107,6 +130,7 @@ class ViewController: UIViewController {
             if self.remainingTime == 0 {
                 self.timer?.invalidate()
                 self.isStarted = false
+                self.progressBar.stopAnimating()
                 self.startTimer()
             }
         }
@@ -116,6 +140,7 @@ class ViewController: UIViewController {
         isStarted = false
         updateUI()
         timer?.invalidate()
+        progressBar.pauseAnimating()
     }
     
     func updateTimerLabel() {
