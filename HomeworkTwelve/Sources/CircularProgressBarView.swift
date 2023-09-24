@@ -16,4 +16,16 @@ class CircularProgressBarView: UIView {
     var progressBarWidth: CGFloat = 5
     var progressBarColor: UIColor = .systemGreen
     var trackColor: UIColor = UIColor(white: 0.9, alpha: 1.0)
+    
+    // MARK: - Initialization
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        createCircularPath()
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        createCircularPath()
+    }
 }
