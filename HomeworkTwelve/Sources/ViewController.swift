@@ -13,6 +13,13 @@ class ViewController: UIViewController {
         return label
     }()
     
+    private lazy var playPauseButton: UIButton = {
+        let button = UIButton()
+        button.addTarget(self, action: #selector(playPauseButtonTapped), for: .touchUpInside)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        return button
+    }()
+    
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
@@ -30,16 +37,23 @@ class ViewController: UIViewController {
     
     private func setupHierarchy() {
         view.addSubview(timerLabel)
+        view.addSubview(playPauseButton)
     }
     
     private func setupLayout() {
         NSLayoutConstraint.activate([
             timerLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            timerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+            timerLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            
+            playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            playPauseButton.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 20)
         ])
     }
     
     // MARK: - Actions
 
+    @objc func playPauseButtonTapped() {
+        
+    }
 }
 
