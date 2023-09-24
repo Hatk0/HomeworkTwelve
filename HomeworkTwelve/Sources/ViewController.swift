@@ -94,7 +94,8 @@ class ViewController: UIViewController {
     func startTimer() {
         isStarted = true
         if remainingTime == 0 {
-            return
+            isWorkTime.toggle()
+            remainingTime = isWorkTime ? 25 * 60 : 5 * 60
         }
         updateUI()
         
@@ -105,9 +106,8 @@ class ViewController: UIViewController {
             
             if self.remainingTime == 0 {
                 self.timer?.invalidate()
-                self.remainingTime = 0
-                self.isWorkTime.toggle()
-                self.updateUI()
+                self.isStarted = false
+                self.startTimer()
             }
         }
     }
