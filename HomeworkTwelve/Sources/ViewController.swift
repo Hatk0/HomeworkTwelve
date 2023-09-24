@@ -55,6 +55,8 @@ class ViewController: UIViewController {
             playPauseButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             playPauseButton.topAnchor.constraint(equalTo: timerLabel.bottomAnchor, constant: 20)
         ])
+        
+        updateUI()
     }
     
     // MARK: - Actions
@@ -65,6 +67,28 @@ class ViewController: UIViewController {
         } else {
             startTimer()
         }
+    }
+    
+    func updateUI() {
+        let buttonImageName = isStarted ? "pause" : "play"
+        let buttonImage = UIImage(systemName: buttonImageName)
+        
+        let imageFrame = CGRect(x: 0, y: 0, width: 40, height: 30)
+        
+        if let existingImageView = playPauseButton.subviews.first(where: { $0 is UIImageView }) as? UIImageView {
+            existingImageView.image = buttonImage?.withRenderingMode(.alwaysOriginal)
+        } else {
+            let imageView = UIImageView(frame: imageFrame)
+            imageView.contentMode = .scaleAspectFit
+            imageView.image = buttonImage?.withRenderingMode(.alwaysOriginal)
+            playPauseButton.setImage(nil, for: .normal)
+            playPauseButton.addSubview(imageView)
+        }
+        
+        let textColor = isWorkTime ? UIColor.systemRed : UIColor.systemGreen
+        timerLabel.textColor = textColor
+        playPauseButton.tintColor = textColor
+        view.backgroundColor = isWorkTime ? .white : UIColor(red: 0.9, green: 0.9, blue: 0.9, alpha: 1.0)
     }
     
     func startTimer() {
